@@ -75,3 +75,24 @@ func (h *Handler) GetHandler(c *gin.Context) {
 	// Success response: 200 OK, raw data as body, Content-Type application/octet-stream
 	c.Data(http.StatusOK, "application/octet-stream", value)
 }
+
+// DeleteHandler handles DELETE /:bucket/:key requests (Delete).
+func (h *Handler) DeleteHandler(c *gin.Context) {
+	bucket := c.Param("bucket")
+	key := c.Param("key")
+
+	if bucket == "" || key == "" {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Bucket and key must not be empty"})
+		return
+	}
+
+	if err := h.Store.Delete(bucket, key); err != nil {
+		// Log the error internally
+		fmt.Printf("Error deleting key %s:%s: %v\n", bucket, key, err)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Internal server error while deleting data"})
+		return
+	}
+
+	// Success response (200 OK as per PRD)
+	c.Status(http.StatusOK)
+}

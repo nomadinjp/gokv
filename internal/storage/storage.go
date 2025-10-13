@@ -80,3 +80,20 @@ func (s *Storage) Get(bucket, key string) ([]byte, error) {
 
 	return value, nil
 }
+
+// Delete removes the key-value pair associated with the given bucket and key.
+// The internal key is constructed as "bucket:key".
+func (s *Storage) Delete(bucket, key string) error {
+	internalKey := []byte(fmt.Sprintf("%s:%s", bucket, key))
+
+	err := s.db.Update(func(txn *badger.Txn) error {
+		// Delete the key. BadgerDB's Delete operation is idempotent, 
+		// meaning it succeeds even if the key does not exist.
+		return txn.Delete(internalKey)
+	})
+
+	if err != nil {
+		return fmt.Errorf("failed to delete key %s:%s: %w", bucket, key, err)
+	}
+	return nil
+}

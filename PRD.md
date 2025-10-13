@@ -36,6 +36,12 @@
             *   `:bucket` (string): 数据的逻辑分组。
             *   `:key` (string): 数据的唯一标识符。
         *   **成功响应**: `200 OK` 状态码，响应体为存储的原始数据。`Content-Type` 头可设置为 `application/octet-stream`。
+    *   **删除数据**: `DELETE /:bucket/:key`
+        *   **功能**: 根据 bucket 和 key 删除一个值。
+        *   **路径参数**:
+            *   `:bucket` (string): 数据的逻辑分组。
+            *   `:key` (string): 数据的唯一标识符。
+        *   **成功响应**: `200 OK` 状态码，响应体可为空。
 
 *   **错误处理规范**:
     *   `400 Bad Request`: 请求路径中的 `:bucket` 或 `:key` 为空。

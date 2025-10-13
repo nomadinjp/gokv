@@ -22,6 +22,7 @@
 *   **API 端点**:
     *   `POST /:bucket/:key`: 将请求体作为值，存储在指定的 `bucket` 和 `key` 下。
     *   `GET /:bucket/:key`: 检索并返回与 `bucket` 和 `key` 关联的值。
+    *   `DELETE /:bucket/:key`: 删除与 `bucket` 和 `key` 关联的值。
 
 *   **鉴权中间件**:
     *   一个 `Gin` 中间件将拦截所有对数据端点的请求。

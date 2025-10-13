@@ -102,7 +102,17 @@ curl -X GET http://localhost:8080/users/user_id_123 \
 # 响应: 200 OK, 响应体为 "Hello, World!"
 ```
 
-### 3. 错误示例 (401 Unauthorized)
+### 3. 删除数据 (DELETE)
+
+删除 `users` bucket 下的 `user_id_123` 键。
+
+```bash
+curl -X DELETE http://localhost:8080/users/user_id_123 \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+# 响应: 200 OK
+```
+
+### 4. 错误示例 (401 Unauthorized)
 
 尝试在没有 Token 的情况下访问。
 

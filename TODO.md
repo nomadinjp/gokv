@@ -72,3 +72,11 @@
 - [x] 详细说明所有环境变量的用途。
 - [x] 提供 `jwt-gen` 工具的使用示例。
 - [x] 提供 `curl` 示例来演示 API 的使用方法。
+
+---
+#### 阶段 7: 删除功能扩展
+
+- [x] **数据存储层**: 在 `internal/storage/storage.go` 中实现 `Delete(bucket, key string)` 方法。
+- [x] **HTTP API 服务器**: 在 `internal/handler/kv.go` 中实现 `DeleteHandler`。
+- [x] **HTTP API 服务器**: 在 `cmd/gokv/main.go` 中注册 `DELETE /:bucket/:key` 路由。
+- [x] **文档**: 更新 `README.md` 中的 API 示例。
