@@ -72,8 +72,8 @@ func (h *Handler) GetHandler(c *gin.Context) {
 		return
 	}
 
-	// Success response: 200 OK, raw data as body, Content-Type application/octet-stream
-	c.Data(http.StatusOK, "application/octet-stream", value)
+	// Success response: 200 OK, raw data as body, Content-Type text/plain; charset=utf-8
+	c.Data(http.StatusOK, "text/plain; charset=utf-8", value)
 }
 
 // DeleteHandler handles DELETE /:bucket/:key requests (Delete).
