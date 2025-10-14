@@ -96,3 +96,34 @@ func (h *Handler) DeleteHandler(c *gin.Context) {
 	// Success response (200 OK as per PRD)
 	c.Status(http.StatusOK)
 }
+
+// ListHandler handles GET /_list requests (List buckets or keys).
+func (h *Handler) ListHandler(c *gin.Context) {
+	bucket := c.Query("bucket")
+
+	var result []string
+	var err error
+
+	if bucket == "" {
+		// List all buckets
+		result, err = h.Store.ListBuckets()
+		if err != nil {
+			// Log the error internally
+			fmt.Printf("Error listing buckets: %v\n", err)
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Internal server error while listing buckets"})
+			return
+		}
+	} else {
+		// List keys in the specified bucket
+		result, err = h.Store.ListKeys(bucket)
+		if err != nil {
+			// Log the error internally
+			fmt.Printf("Error listing keys for bucket %s: %v\n", bucket, err)
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Internal server error while listing keys for bucket %s", bucket)})
+			return
+		}
+	}
+
+	// Success response: 200 OK, JSON array (even if empty)
+	c.JSON(http.StatusOK, result)
+}

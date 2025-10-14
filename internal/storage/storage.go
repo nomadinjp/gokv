@@ -3,6 +3,7 @@ package storage
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/dgraph-io/badger/v4"
 )
@@ -96,4 +97,69 @@ func (s *Storage) Delete(bucket, key string) error {
 		return fmt.Errorf("failed to delete key %s:%s: %w", bucket, key, err)
 	}
 	return nil
+}
+
+// ListBuckets retrieves a list of all unique bucket names by iterating over all keys.
+func (s *Storage) ListBuckets() ([]string, error) {
+	buckets := make(map[string]struct{})
+
+	err := s.db.View(func(txn *badger.Txn) error {
+		opts := badger.DefaultIteratorOptions
+		it := txn.NewIterator(opts)
+		defer it.Close()
+
+		for it.Rewind(); it.Valid(); it.Next() {
+			item := it.Item()
+			key := string(item.Key())
+			
+			// Keys are stored as "bucket:key". Find the first colon.
+			if idx := strings.Index(key, ":"); idx != -1 {
+				bucketName := key[:idx]
+				buckets[bucketName] = struct{}{}
+			}
+		}
+		return nil
+	})
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to list buckets: %w", err)
+	}
+
+	// Convert map keys to a slice
+	result := make([]string, 0, len(buckets))
+	for bucket := range buckets {
+		result = append(result, bucket)
+	}
+
+	return result, nil
+}
+
+// ListKeys retrieves a list of all keys within a specific bucket.
+func (s *Storage) ListKeys(bucket string) ([]string, error) {
+	keys := make([]string, 0)
+	prefix := []byte(fmt.Sprintf("%s:", bucket))
+
+	err := s.db.View(func(txn *badger.Txn) error {
+		opts := badger.DefaultIteratorOptions
+		opts.Prefix = prefix // Use prefix option to only iterate over keys in this bucket
+		it := txn.NewIterator(opts)
+		defer it.Close()
+
+		for it.Seek(prefix); it.ValidForPrefix(prefix); it.Next() {
+			item := it.Item()
+			key := string(item.Key())
+			
+			// Keys are stored as "bucket:key". Extract the key part.
+			// The length of the prefix is len(bucket) + 1 (for the colon).
+			keyName := key[len(prefix):]
+			keys = append(keys, keyName)
+		}
+		return nil
+	})
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to list keys for bucket %s: %w", bucket, err)
+	}
+
+	return keys, nil
 }

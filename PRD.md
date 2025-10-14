@@ -42,6 +42,13 @@
             *   `:bucket` (string): 数据的逻辑分组。
             *   `:key` (string): 数据的唯一标识符。
         *   **成功响应**: `200 OK` 状态码，响应体可为空。
+    *   **列表查询**: `GET /_list`
+        *   **功能**: 列出所有 bucket 或指定 bucket 下的所有 key。
+        *   **查询参数**:
+            *   `bucket` (string, 可选): 如果提供，则列出该 bucket 下的所有 key；如果未提供，则列出所有 bucket。
+        *   **成功响应**: `200 OK` 状态码，响应体为 JSON 格式的列表（例如 `["bucket1", "bucket2"]` 或 `["keyA", "keyB"]`）。
+        *   **错误处理**:
+            *   如果提供了 `bucket` 参数，但该 bucket 不存在或为空，返回 `200 OK` 和一个空列表 `[]`。
 
 *   **错误处理规范**:
     *   `400 Bad Request`: 请求路径中的 `:bucket` 或 `:key` 为空。

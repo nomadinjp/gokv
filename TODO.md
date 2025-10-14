@@ -14,6 +14,9 @@
 - [x] 实现 `Set(bucket, key string, value []byte)` 方法，内部键使用 `bucket:key` 格式。
 - [x] 实现 `Get(bucket, key string)` 方法，用于按 `bucket:key` 读取数据。
 - [x] 实现 `DB_PATH` 环境变量的读取，并设置默认值 `./data`。
+- [ ] **实现列表功能**:
+    - [ ] 实现 `ListBuckets()` 方法，返回所有 bucket 名称的列表。
+    - [ ] 实现 `ListKeys(bucket string)` 方法，返回指定 bucket 下所有 key 的列表。
 
 #### 阶段 3: JWT 生成命令行工具 (`jwt-gen`)
 
@@ -42,10 +45,15 @@
     - [x] `GET /:bucket/:key`:
         - [x] 绑定路径参数。
         - [x] 调用 `storage.Get()` 方法获取数据。
-        - [x] 如果键不存在，返回 `404 Not Found`。
-        - [x] 成功后返回 `200 OK`，响应体为获取到的数据。
-- [x] **实现主函数 (`main`)**:
-    - [x] 读取 `PORT` 和 `GIN_MODE` 环境变量。
+            - [x] 如果键不存在，返回 `404 Not Found`。
+            - [x] 成功后返回 `200 OK`，响应体为获取到的数据。
+        - [ ] **实现列表 API 端点**:
+            - [ ] `GET /_list`:
+                - [ ] 绑定查询参数 `bucket`。
+                - [ ] 如果 `bucket` 为空，调用 `storage.ListBuckets()` 并返回 JSON 列表。
+                - [ ] 如果 `bucket` 不为空，调用 `storage.ListKeys(bucket)` 并返回 JSON 列表。
+                - [ ] 确保返回的列表是 JSON 格式，即使为空也返回 `[]`。
+        - [x] **实现主函数 (`main`)**:    - [x] 读取 `PORT` 和 `GIN_MODE` 环境变量。
     - [x] 初始化存储层。
     - [x] 设置信号处理器（`os.Signal`, `syscall.SIGINT`, `syscall.SIGTERM`）以实现优雅停机（关闭数据库）。
     - [x] 启动 Gin 服务器。

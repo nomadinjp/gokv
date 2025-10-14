@@ -23,6 +23,7 @@
     *   `POST /:bucket/:key`: 将请求体作为值，存储在指定的 `bucket` 和 `key` 下。
     *   `GET /:bucket/:key`: 检索并返回与 `bucket` 和 `key` 关联的值。
     *   `DELETE /:bucket/:key`: 删除与 `bucket` 和 `key` 关联的值。
+    *   `GET /_list?bucket={bucket_name}`: 列出所有 bucket 或指定 bucket 下的所有 key。
 
 *   **鉴权中间件**:
     *   一个 `Gin` 中间件将拦截所有对数据端点的请求。
@@ -44,6 +45,9 @@
     *   `BadgerDB` 是一个简单的 K-V 存储，本身不支持 "Bucket"。
     *   通过将用户提供的 `bucket` 和 `key` 与一个分隔符（例如冒号 `:`）组合，可以模拟出命名空间。
     *   内部存储的键格式为 `bucket:key`。这允许在逻辑上对键进行分组，同时保持存储模型的扁平化和高性能。
+    *   **列表功能**: 为了支持 `/ _list` 端点，存储层需要提供一个方法来迭代（Iterate）数据库中的键。
+        *   列出所有 Bucket：通过迭代所有键，提取 `bucket:key` 格式中的 `bucket` 部分，并去重。
+        *   列出指定 Bucket 下的 Key：通过迭代以 `bucket:` 为前缀的所有键，提取 `key` 部分。
 
 ##### 2.3. JWT 生成命令行工具 (`jwt-gen`)
 

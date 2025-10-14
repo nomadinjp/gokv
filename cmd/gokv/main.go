@@ -30,6 +30,7 @@ func setupRouter(store *storage.Storage) *gin.Engine {
 		api.POST("/:bucket/:key", kvHandler.PostHandler)
 		api.GET("/:bucket/:key", kvHandler.GetHandler)
 		api.DELETE("/:bucket/:key", kvHandler.DeleteHandler)
+		api.GET("/_list", kvHandler.ListHandler)
 	}
 
 	return r
