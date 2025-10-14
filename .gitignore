@@ -1,3 +1,4 @@
 bin/
 data/
 note.txt
+build-image.sh
