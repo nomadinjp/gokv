@@ -23,13 +23,15 @@ func setupRouter(store *storage.Storage) *gin.Engine {
 
 	// Protected API routes
 	api := r.Group("/")
-	api.Use(middleware.AuthMiddleware())
 	{
 		kvHandler := handler.NewHandler(store)
 		api.POST("/:bucket/:key", kvHandler.PostHandler)
 		api.GET("/:bucket/:key", kvHandler.GetHandler)
 		api.DELETE("/:bucket/:key", kvHandler.DeleteHandler)
 		api.GET("/_list", kvHandler.ListHandler)
+
+		api.GET("/", kvHandler.ListHandler)
+		api.GET("/:bucket", kvHandler.ListHandler)
 	}
 
 	return r
@@ -42,7 +44,7 @@ func main() {
 	if port == "" {
 		port = "8080"
 	}
-	
+
 	ginMode := os.Getenv("GIN_MODE")
 	if ginMode == "" {
 		ginMode = gin.DebugMode

@@ -97,9 +97,17 @@ func (h *Handler) DeleteHandler(c *gin.Context) {
 	c.Status(http.StatusOK)
 }
 
+func getBucketArg(c *gin.Context) string {
+	bucket := c.Param("bucket")
+	if bucket != "" {
+		return bucket
+	}
+	return c.Query("bucket")
+}
+
 // ListHandler handles GET /_list requests (List buckets or keys).
 func (h *Handler) ListHandler(c *gin.Context) {
-	bucket := c.Query("bucket")
+	bucket := getBucketArg(c)
 
 	var result []string
 	var err error
