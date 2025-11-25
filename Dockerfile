@@ -19,10 +19,6 @@ COPY . .
 # The server is the main application, named 'gokv'
 RUN go build -ldflags "-s -w" -o /gokv ./cmd/gokv
 
-# Build the jwt-gen tool (optional for final image, but good to have it built)
-RUN go build -ldflags "-s -w" -o /jwt-gen ./cmd/jwt-gen
-
-
 # --- Stage 2: Final Image ---
 # Use distroless for a minimal, secure final image
 FROM gcr.io/distroless/static-debian12
