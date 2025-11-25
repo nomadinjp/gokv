@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"gokv/internal/handler"
-	"gokv/internal/middleware"
 	"gokv/internal/storage"
 
 	"github.com/gin-gonic/gin"
